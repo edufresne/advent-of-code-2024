@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 def get_input(day: int) -> list[str]:
-    return get_text().splitlines()
+    return get_text(10).splitlines()
 
 
 def get_text(day: int) -> str:
