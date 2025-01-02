@@ -18,7 +18,7 @@ def get_score(lines: list[list[str]], trailhead: tuple[int, int]) -> int:
     print(f"Trailhead: {trailhead}")
     q = get_next_coords(lines, trailhead)
     last_height = 0
-    peaks = set()
+    score = 0
     while q:
         current_items = q
         q = []
@@ -27,13 +27,13 @@ def get_score(lines: list[list[str]], trailhead: tuple[int, int]) -> int:
             if height_val - last_height == 1:
                 print(f"Visited: {item}: {height_val} at current height: {last_height}")
                 if height_val == 9:
-                    peaks.add(item)
+                    score += 1
                 else:
                     q.extend(get_next_coords(lines, item))
 
         last_height += 1
-    print(f"Trailehead: {trailhead}, score: {len(peaks)}")
-    return len(peaks)
+    print(f"Trailehead: {trailhead}, score: {score}")
+    return score
 
 
 def run():
