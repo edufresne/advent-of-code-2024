@@ -12,10 +12,8 @@ def get_sides(lines: list[str, str], value: str, region: set[tuple[int, int]]) -
                 (line_offset + 1, string_offset),
             )
             if (line_offset, string_offset) not in region:
-                if line_offset == 0:
-                    exists_above = False
-                if line_offset == len(lines) - 1:
-                    exists_below = False
+                exists_above = False
+                exists_below = False
                 continue
 
             if line_offset == 0:
@@ -46,10 +44,8 @@ def get_sides(lines: list[str, str], value: str, region: set[tuple[int, int]]) -
                 (line_offset, string_offset + 1),
             )
             if (line_offset, string_offset) not in region:
-                if string_offset == 0:
-                    exists_left = False
-                if string_offset == len(lines[0]) - 1:
-                    exists_right = False
+                exists_left = False
+                exists_right = False
                 continue
 
             if string_offset == 0:
