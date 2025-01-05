@@ -1,22 +1,9 @@
 import utils
 
 
-def get_next_coords(lines: [list[str]], pos: tuple[int, int]):
-    return [
-        item
-        for item in [
-            (pos[0], pos[1] + 1),
-            (pos[0], pos[1] - 1),
-            (pos[0] + 1, pos[1]),
-            (pos[0] - 1, pos[1]),
-        ]
-        if 0 <= item[0] < len(lines) and 0 <= item[1] < len(lines[0])
-    ]
-
-
 def get_score(lines: list[list[str]], trailhead: tuple[int, int]) -> int:
     print(f"Trailhead: {trailhead}")
-    q = get_next_coords(lines, trailhead)
+    q = utils.get_next_coords(lines, trailhead)
     last_height = 0
     peaks = set()
     while q:
@@ -29,7 +16,7 @@ def get_score(lines: list[list[str]], trailhead: tuple[int, int]) -> int:
                 if height_val == 9:
                     peaks.add(item)
                 else:
-                    q.extend(get_next_coords(lines, item))
+                    q.extend(utils.get_next_coords(lines, item))
 
         last_height += 1
     print(f"Trailehead: {trailhead}, score: {len(peaks)}")
