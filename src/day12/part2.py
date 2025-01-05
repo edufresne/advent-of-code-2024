@@ -4,76 +4,77 @@ import utils
 
 def get_sides(lines: list[str, str], value: str, region: set[tuple[int, int]]) -> int:
     result = 0
-    sides = set()
     for line_offset in range(len(lines)):
+        exists_above, exists_below = False, False
         for string_offset in range(len(lines[0])):
-            if (line_offset, string_offset) not in region:
-                if line_offset == 0:
-                    sides.discard(0)
-                elif line_offset == len(lines) - 1:
-                    sides.discard(len(lines) - 1)
-                continue
-
             above, below = (
                 (line_offset - 1, string_offset),
                 (line_offset + 1, string_offset),
             )
-            if line_offset != 0:
-                if lines[above[0]][above[1]] != value and line_offset not in sides:
-                    sides.add(line_offset)
-                    result += 1
-                elif lines[above[0]][above[1]] == value:
-                    sides.discard(line_offset)
-            elif 0 not in sides:
-                sides.add(0)
-                result += 1
-
-            if line_offset != len(lines) - 1:
-                if lines[below[0]][below[1]] != value and line_offset + 1 not in sides:
-                    sides.add(line_offset + 1)
-                    result += 1
-                elif lines[below[0]][below[1]] == value:
-                    sides.discard(line_offset + 1)
-            elif len(lines) not in sides:
-                sides.add(len(lines))
-                result += 1
-
-    sides = set()
-    for string_offset in range(len(lines[0])):
-        for line_offset in range(len(lines)):
             if (line_offset, string_offset) not in region:
-                if string_offset == 0:
-                    sides.discard(0)
-                elif string_offset == len(lines[0]) - 1:
-                    sides.discard(len(lines[0]) - 1)
+                if line_offset == 0:
+                    exists_above = False
+                if line_offset == len(lines) - 1:
+                    exists_below = False
                 continue
 
+            if line_offset == 0:
+                if not exists_above:
+                    result += 1
+                    exists_above = True
+            elif lines[above[0]][above[1]] != value and not exists_above:
+                exists_above = True
+                result += 1
+            elif lines[above[0]][above[1]] == value:
+                exists_above = False
+
+            if line_offset == len(lines) - 1:
+                if not exists_below:
+                    result += 1
+                    exists_below = True
+            elif lines[below[0]][below[1]] != value and not exists_below:
+                exists_below = True
+                result += 1
+            elif lines[below[0]][below[1]] == value:
+                exists_below = False
+    print("Left to right")
+    for string_offset in range(len(lines[0])):
+        exists_left, exists_right = False, False
+        for line_offset in range(len(lines)):
             left, right = (
                 (line_offset, string_offset - 1),
                 (line_offset, string_offset + 1),
             )
-            if string_offset != 0:
-                if lines[left[0]][left[1]] != value and string_offset not in sides:
-                    sides.add(string_offset)
-                    result += 1
-                elif lines[above[0]][above[1]] == value:
-                    sides.discard(string_offset)
-            elif 0 not in sides:
-                sides.add(0)
-                result += 1
+            if (line_offset, string_offset) not in region:
+                if string_offset == 0:
+                    exists_left = False
+                if string_offset == len(lines[0]) - 1:
+                    exists_right = False
+                continue
 
-            if string_offset != len(lines[0]) - 1:
-                if (
-                    lines[right[0]][right[1]] != value
-                    and string_offset + 1 not in sides
-                ):
-                    sides.add(string_offset + 1)
+            if string_offset == 0:
+                if not exists_left:
+                    print(f"{(line_offset, string_offset)}: +1 Left border")
                     result += 1
-                elif lines[right[0]][right[1]] == value:
-                    sides.discard(string_offset + 1)
-            elif len(lines[0]) not in sides:
-                sides.add(len(lines[0]))
+                    exists_left = True
+            elif lines[left[0]][left[1]] != value and not exists_left:
+                print(f"{(line_offset, string_offset)}: +1 Left of square")
+                exists_left = True
                 result += 1
+            elif lines[left[0]][left[1]] == value:
+                exists_left = False
+
+            if string_offset == len(lines[0]) - 1:
+                if not exists_right:
+                    print(f"{(line_offset, string_offset)}: +1 Right border")
+                    result += 1
+                    exists_right = True
+            elif lines[right[0]][right[1]] != value and not exists_right:
+                print(f"{(line_offset, string_offset)}: +1 Right of square")
+                exists_right = True
+                result += 1
+            elif lines[right[0]][right[1]] == value:
+                exists_right = False
     return result
 
 
