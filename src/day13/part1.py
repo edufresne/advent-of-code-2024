@@ -23,12 +23,23 @@ class Prize:
     prize_x: int
     prize_y: int
 
+    def __str__(self):
+        return (
+            f"Button A: X+{self.a_x}, Y+{self.a_y}\n"
+            + f"Button B: {self.b_x}, Y+{self.b_y}\n"
+            + f"Prize: X={self.prize_x}, Y={self.prize_y}\n"
+        )
+
+    def __repr__(self):
+        return self.__str__()
+
 
 _BUTTON_RE = re.compile(r"Button.+: X\+(\d+), Y\+(\d+)")
 _PRIZE_RE = re.compile(r"Prize: X=(\d+), Y=(\d+)")
 
 
 def solve(prize: Prize) -> int:
+    print(prize)
     min_combination = None
     min_price = max(prize.prize_x, prize.prize_y)
     for a_presses in range(
@@ -44,7 +55,8 @@ def solve(prize: Prize) -> int:
             ):
                 min_combination = (a_presses, b_presses)
                 min_price = 3 * a_presses + b_presses
-    print(min_combination)
+    if min_combination is not None:
+        print(min_combination)
     return 0 if min_combination is None else min_price
 
 
