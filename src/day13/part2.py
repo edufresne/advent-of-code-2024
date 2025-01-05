@@ -1,4 +1,4 @@
-from decimal import Decimal
+from fractions import Fraction
 import re
 import utils
 from dataclasses import dataclass
@@ -61,10 +61,10 @@ def solve(prize: Prize) -> int:
     b_presses = (prize.prize_y - (prize.a_y * prize.prize_x / prize.a_x)) / (
         prize.b_y - (prize.a_y * prize.b_x / prize.a_x)
     )
-    if b_presses != int(b_presses) or b_presses < 0:
+    if b_presses.denominator != 1 or b_presses.numerator <= 0:
         return 0
-    a_presses = (prize.prize_y - int(b_presses) * prize.b_y) / prize.a_y
-    if a_presses != int(a_presses) or a_presses < 0:
+    a_presses = (prize.prize_y - b_presses * prize.b_y) / prize.a_y
+    if a_presses.denominator != 1 or a_presses.numerator <= 0:
         return 0
 
     print((a_presses, b_presses))
@@ -82,15 +82,15 @@ def run():
         prize = _PRIZE_RE.match(lines[i + 2])
         prizes.append(
             Prize(
-                a_x=Decimal(a_button.group(1)),
-                a_y=Decimal(a_button.group(2)),
-                b_x=Decimal(b_button.group(1)),
-                b_y=Decimal(b_button.group(2)),
-                prize_x=Decimal(int(prize.group(1))),
-                prize_y=Decimal(prize.group(2)),
+                a_x=Fraction(a_button.group(1)),
+                a_y=Fraction(a_button.group(2)),
+                b_x=Fraction(b_button.group(1)),
+                b_y=Fraction(b_button.group(2)),
+                prize_x=Fraction(int(prize.group(1))) + Fraction(_CONVERSION_INCREMENT),
+                prize_y=Fraction(int(prize.group(2))) + Fraction(_CONVERSION_INCREMENT),
             )
         )
 
     for prize in prizes:
         result += solve(prize)
-    print(result)
+    print(int(result))
