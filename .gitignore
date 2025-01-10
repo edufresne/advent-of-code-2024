@@ -15,3 +15,6 @@ wheels/
 # IDEs
 .vscode/
 .idea/
+
+# Output files
+output.txt
